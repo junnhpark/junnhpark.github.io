@@ -42,7 +42,7 @@ Notion에서 **특정 텍스트에 링크를 걸고**, 클릭 시 **이미지가
 
 - `img` (**필수**): 이미지 URL (http/https **또는 동일 호스트 기준 상대경로** `./assets/...`)
 - `caption` (선택): 상단 캡션 텍스트
-- `back` (선택): 닫을 때 이동할 Notion URL  
+- `back` (강력 추천): 닫을 때 이동할 Notion URL  
   - **보안상 `notion.so` / `notion.site` 도메인만 허용**합니다.
 
 ### 닫기 동작
@@ -53,4 +53,7 @@ Notion에서 **특정 텍스트에 링크를 걸고**, 클릭 시 **이미지가
   - 그 외 `document.referrer`가 Notion이면 → referrer로 이동
   - 그 외 히스토리가 있으면 → `history.back()`
   - 마지막 fallback → “탭을 닫아주세요” 안내
+
+> 참고: “탭을 자동으로 닫기”는 브라우저 정책상 **항상** 성공하지 않습니다.  
+> 대신 `back`을 넣어두면 닫을 때 **원래 Notion 페이지로 즉시 복귀**가 안정적으로 됩니다.
 
