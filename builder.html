@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Notion Image Popup - Link Builder</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="card">
+        <h1>Notion 이미지 팝업 링크 생성기</h1>
+        <p>
+          Notion에서 텍스트에 링크를 걸 때, 이 툴이 만들어준 URL을 붙여 넣으면 됩니다.
+        </p>
+
+        <div class="row" style="width: 100%">
+          <input
+            id="img"
+            class="input"
+            placeholder="이미지 URL (필수) 예: https://.../image.png"
+            autocomplete="off"
+            inputmode="url"
+          />
+        </div>
+        <div class="row" style="width: 100%; margin-top: 10px">
+          <input
+            id="caption"
+            class="input"
+            placeholder="캡션 (선택) 예: 크리에이티브 A (15초)"
+            autocomplete="off"
+          />
+        </div>
+        <div class="row" style="width: 100%; margin-top: 10px">
+          <input
+            id="back"
+            class="input"
+            placeholder="뒤로 돌아갈 Notion URL (선택) 예: https://www.notion.so/..."
+            autocomplete="off"
+            inputmode="url"
+          />
+        </div>
+
+        <div class="row" style="margin-top: 12px">
+          <button id="build" class="btn" type="button">링크 만들기</button>
+          <a class="btn" href="./index.html">팝업 페이지로</a>
+        </div>
+
+        <div style="margin-top: 14px">
+          <div class="hint" style="margin-bottom: 6px">생성 결과</div>
+          <input id="out" class="input" readonly />
+          <div class="row" style="margin-top: 10px">
+            <button id="copy" class="btn" type="button">복사</button>
+            <a id="open" class="btn" href="#" target="_blank" rel="noreferrer">열어보기</a>
+          </div>
+          <div id="msg" class="hint" style="margin-top: 10px"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./builder.js" defer></script>
+  </body>
+</html>
