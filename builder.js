@@ -41,6 +41,18 @@ function main() {
   const outEl = $("out");
   const openEl = $("open");
 
+  // If user opened this builder from Notion, prefill `back` with referrer.
+  try {
+    if (!backEl.value.trim() && document.referrer) {
+      const u = new URL(document.referrer);
+      const h = u.hostname.toLowerCase();
+      const isNotion = h === "notion.so" || h.endsWith(".notion.so") || h.endsWith(".notion.site");
+      if (isNotion) backEl.value = u.toString();
+    }
+  } catch {
+    // ignore
+  }
+
   function sync() {
     const img = imgEl.value.trim();
     const caption = captionEl.value.trim();
