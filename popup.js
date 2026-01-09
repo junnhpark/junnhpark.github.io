@@ -119,7 +119,7 @@ function renderModal({ imgUrl, caption, bg }) {
 
   const cap = document.createElement("div");
   cap.className = "modal__caption";
-  cap.textContent = caption || "클릭하면 닫힙니다 (ESC 가능)";
+  cap.textContent = caption || "바깥 클릭/ESC로 닫기";
 
   const closeBtn = document.createElement("button");
   closeBtn.className = "modal__close";
@@ -145,6 +145,39 @@ function renderModal({ imgUrl, caption, bg }) {
   return { modal, closeBtn, img, panel };
 }
 
+function tryCloseWindow() {
+  // Browsers allow `window.close()` only for windows opened by script
+  // (or sometimes same-tab flows). We still try for best UX.
+  try {
+    if (window.opener && !window.opener.closed) {
+      // Can't reliably navigate opener across origins, but focusing is allowed.
+      try {
+        window.opener.focus();
+      } catch {
+        // ignore
+      }
+    }
+  } catch {
+    // ignore
+  }
+
+  try {
+    window.close();
+    return true;
+  } catch {
+    // ignore
+  }
+
+  // A common fallback pattern (still often blocked)
+  try {
+    window.open("", "_self");
+    window.close();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function closeAndReturn(backUrl) {
   // Hide instantly (so it feels like a modal closing)
   const modal = document.querySelector(".modal");
@@ -152,12 +185,17 @@ function closeAndReturn(backUrl) {
 
   // Then navigate back if we can.
   if (backUrl) {
-    window.location.href = backUrl;
+    // Use replace so the back button doesn't come back to the popup page.
+    window.location.replace(backUrl);
+    // If this page was opened as a new tab/window, attempt to close it.
+    // (May be blocked by browser policy; navigation above still works.)
+    setTimeout(tryCloseWindow, 120);
     return;
   }
 
   if (window.history.length > 1) {
     window.history.back();
+    setTimeout(tryCloseWindow, 120);
     return;
   }
 
@@ -169,9 +207,25 @@ function closeAndReturn(backUrl) {
     const h1 = document.createElement("h1");
     h1.textContent = "닫았습니다";
     const p = document.createElement("p");
-    p.textContent = "이 탭을 닫거나 뒤로가기를 눌러 Notion으로 돌아가세요.";
+    p.textContent =
+      "Notion로 돌아갈 주소를 모르면 자동 복귀가 어렵습니다. 이 탭을 닫거나 뒤로가기를 눌러주세요.";
+    const row = document.createElement("div");
+    row.className = "row";
+    row.style.marginTop = "12px";
+    const btn = document.createElement("button");
+    btn.className = "btn";
+    btn.type = "button";
+    btn.textContent = "탭 닫기 시도";
+    btn.addEventListener("click", () => {
+      const ok = tryCloseWindow();
+      if (!ok) {
+        // no-op; user can close manually
+      }
+    });
+    row.appendChild(btn);
     card.appendChild(h1);
     card.appendChild(p);
+    card.appendChild(row);
     appEl.appendChild(card);
   }
 }
